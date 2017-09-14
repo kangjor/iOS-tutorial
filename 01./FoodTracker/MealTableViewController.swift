@@ -13,6 +13,21 @@ class MealTableViewController: UITableViewController {
     // MARK: Properties
     var meals = [Meal]()
     
+    // MARK: Actions
+    // This is simple method for passing information from another view controller
+    // for more complex communication between view controllers, consider using the delegate pattern (https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html#//apple_ref/doc/uid/TP40014097)
+    @IBAction func unwindToMealList(sender: UIStoryboardSegue) {
+        // Need to downcast because sender.sourceViewController is of type UIViewController, but you need to work with MealViewController.
+        if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
+            // Add a new meal
+            let newIndexPath = IndexPath(row: meals.count, section: 0)
+            
+            meals.append(meal)
+            
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        }
+    }
+    
     // MARK: Private methods
     private func loadSampleMeals() {
         let photo1 = UIImage(named: "meal1")
