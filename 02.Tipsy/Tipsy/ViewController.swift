@@ -16,9 +16,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipPercentSlider: UISlider!
     @IBOutlet weak var tipAmountLabel: UILabel!
     @IBOutlet weak var totalAmountLabel: UILabel!
+    @IBOutlet weak var splitLabel: UILabel!
+    @IBOutlet weak var splitSlider: UISlider!
+    @IBOutlet weak var splitTotalLabel: UILabel!
     
     // create instance of class
-    var tip = TipModel(billAmount: 0, tipPercent: 0)
+    var tip = TipModel(billAmount: 0, tipPercent: 0, split: 1)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +39,8 @@ class ViewController: UIViewController {
         // as means to downcast as type 'NSString' which has a property .doubleValue.
         tip.billAmount = ((textField.text)! as NSString).doubleValue
         
+        tip.split = Int(splitSlider.value)
+        
         tip.calculateTip()
     }
     
@@ -44,6 +49,8 @@ class ViewController: UIViewController {
         tipAmountLabel.text = String(format: "$%0.2f", tip.tipAmount)
         totalAmountLabel.text = String(format: "$%0.2f", tip.totalAmount)
         tipPercentLabel.text = "Tip: \(Int(tipPercentSlider.value * 100))%"
+        splitLabel.text = "\(Int(splitSlider.value)) Split"
+        splitTotalLabel.text = String(format: "$%0.2f", tip.splitTotal)
     }
     
 
@@ -53,6 +60,7 @@ class ViewController: UIViewController {
         setTipCalculationValues()
         updateUI()
     }
+    
     @IBAction func tipPercentChanged(_ sender: UISlider) {
         
         // hide keyboard
@@ -65,6 +73,22 @@ class ViewController: UIViewController {
         
         setTipCalculationValues()
         updateUI()
+    }
+    
+    @IBAction func splitSliderChanged(_ sender: UISlider) {
+        // hide keyboard
+        view.endEditing(true)
+        
+        // make slider snappier
+//        let sliderValue = round(sender.value * 1.0) / 1.0
+//        sender.value = sliderValue
+        
+        let sliderValue = Float(Int(sender.value))
+        sender.value = sliderValue
+        
+        setTipCalculationValues()
+        updateUI()
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
